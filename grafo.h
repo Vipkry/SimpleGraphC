@@ -1,6 +1,6 @@
 struct graph {
-    int vertexes;
     int edges;
+    int* vertexes;
     int** matrix;
 };
 
