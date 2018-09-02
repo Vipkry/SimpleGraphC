@@ -58,15 +58,6 @@ void insertEdge(Graph *g, char v, char u){
     g->edges++;
 }
 
-void removeEdge(Graph *g, char v, char u){
-    if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
-
-    int v1 = map(v), v2 = map(u);
-    g->matrix[v1][v2]--;
-    g->matrix[v2][v1]--;
-    g->edges--;
-}
-
 int vertexSize(Graph g){
     Graph* graph = &g;
     int counter = 0, i = 0;
@@ -80,3 +71,30 @@ int edgeSize(Graph g){
     Graph* graph = &g;
     return graph->edges;
 }
+
+void removeEdge(Graph *g, char v, char u){
+    if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
+    int v1 = map(v), v2 = map(u);
+
+    if(g->matrix[v1][v2] == 0){
+        printf("Skipping nonexistent edge removal\n");
+        return;
+    }
+
+    g->matrix[v1][v2]--;
+    g->matrix[v2][v1]--;
+    g->edges--;
+}
+
+void removeVertex(Graph *g, char v){
+    if (!hasVertex(g, v)) return defaultErrorMessage();
+
+    // remove todas arestas realcionadas ao vértice
+        // percorre matriz de adjacencia procurando links do vértice
+        // seta todos eles 0
+        // reduz o nº de vértices pra ficar de acordo
+    // remove vértice
+        // tira ele da lista
+        // free no vértice
+}
+

@@ -12,6 +12,7 @@ int main() {
     insertEdge(g, 'A', 'E');
 
     removeEdge(g, 'A', 'E');
+    removeEdge(g, 'A', 'E');
 
     printf("Edges: %d\n", edgeSize(graph));
     printf("Vertexes: %d\n", vertexSize(graph));
