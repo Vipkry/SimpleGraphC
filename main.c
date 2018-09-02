@@ -22,6 +22,8 @@ int main() {
     printf("A->B: %d\n", isNeighbour(graph, 'A', 'B'));
     printf("E->B: %d\n", isNeighbour(graph, 'E', 'B'));
 
+    neighbours(graph, 'A');
+
     printf("Edges: %d\n", edgeSize(graph));
     printf("Vertexes: %d\n", vertexSize(graph));
 
