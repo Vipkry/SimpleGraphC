@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "grafo.h"
 
 int main() {
@@ -20,5 +21,7 @@ int main() {
 
     printf("Edges: %d\n", edgeSize(graph));
     printf("Vertexes: %d\n", vertexSize(graph));
+
+    endGraph(g);
     return 0;
 }

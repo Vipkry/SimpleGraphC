@@ -113,3 +113,13 @@ void removeVertex(Graph *g, char v){
     g->vertexes[vertex] = 0;
     free(g->matrix[vertex]);
 }
+
+void endGraph(Graph *g){
+    for (int i = 0; i < MAX_SIZE; i++)
+        if (g->vertexes[i] != 0)
+            free(g->matrix[i]);
+
+    free(g->matrix);
+    free(g->vertexes);
+//      free(g);
+}
