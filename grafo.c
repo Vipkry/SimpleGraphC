@@ -81,6 +81,18 @@ int edgeSize(Graph g){
     return graph->edges;
 }
 
+int isNeighbour(Graph g, char v, char u){
+    Graph* graph = &g;
+
+    if (!hasVertex(graph, v) || !hasVertex(graph, u)){
+        defaultErrorMessage();
+        return 0;
+    }
+
+    int i = to_int(v), j = to_int(u);
+    return graph->matrix[i][j];
+}
+
 void removeEdge(Graph *g, char v, char u){
     if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
     int v1 = to_int(v), v2 = to_int(u);
