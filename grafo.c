@@ -98,6 +98,8 @@ int isNeighbour(Graph g, char v, char u){
 
 void neighbours(Graph g, char v){
     Graph* graph = &g;
+    if (!hasVertex(graph, v)) return defaultErrorMessage();
+
     int i, vertex = to_int(v);
     for (i = 0; i < MAX_SIZE; i++){
         if (graph->matrix[vertex][i] != 0){
