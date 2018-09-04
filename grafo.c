@@ -7,6 +7,8 @@
 *  the maximum number of vertexes as 26 */
 #define MAX_SIZE 26
 
+/* Displays error message in case the program is trying to access or make use of
+ * vertexes not yet initialized or re-assigning one of them */
 void defaultErrorMessage(){
     printf("A vertex/edge is being used before assignment or you are trying to re-assign it.\n"
           "Are you sure you inserted/removed the vertex/edge correctly?\n");
@@ -32,7 +34,7 @@ int hasVertex(Graph *g, char c){
 
 /* initGraph helper for initializing vertexes list */
 int* initializeVertexes(){
-    int* vertexes = (int *) malloc(sizeof(int *) * MAX_SIZE);
+    int* vertexes = (int *) malloc(sizeof(int) * MAX_SIZE);
 
     // 0 -> vertex not inserted
     // 1 -> vertex inserted
@@ -43,7 +45,7 @@ int* initializeVertexes(){
 
 Graph initGraph(){
     Graph* g  = (Graph *) malloc(sizeof(Graph));
-    g->matrix = (int **) malloc(sizeof(int **) * MAX_SIZE);
+    g->matrix = (int **) malloc(sizeof(int *) * MAX_SIZE);
     g->vertexes = initializeVertexes();
     g->edges = 0;
     return *g;
@@ -70,6 +72,7 @@ void insertEdge(Graph *g, char v, char u){
 int vertexSize(Graph g){
     Graph* graph = &g;
     int counter = 0, i = 0;
+    // vertexes set to one means they have been initialized, therefore are part of the graph
     for(i; i < MAX_SIZE; i++)
         if (graph->vertexes[i] == 1)
             counter++;
@@ -121,6 +124,7 @@ void removeVertex(Graph *g, char v){
     if (!hasVertex(g, v)) return defaultErrorMessage();
     int i, j, k, n_edges, vertex = to_int(v);
 
+    // iterate through the entire matrix cleaning connections to the vertex we're removing
     for (i = 0; i < MAX_SIZE; i++){
         if (g->vertexes[i] != 0){ // skipping nonexistent vertexes
             for (j = 0; j < MAX_SIZE; j++){
@@ -133,15 +137,17 @@ void removeVertex(Graph *g, char v){
     }
 
     g->vertexes[vertex] = 0;
+    // free the correspondent matrix array as it was removed therefore there's no edge connecting them
     free(g->matrix[vertex]);
 }
 
 void endGraph(Graph *g){
+    // free the matrix
     for (int i = 0; i < MAX_SIZE; i++)
+        // vertexes set to zero means they're not initialized or have already been freed
         if (g->vertexes[i] != 0)
             free(g->matrix[i]);
 
     free(g->matrix);
     free(g->vertexes);
-//      free(g);
 }
