@@ -11,11 +11,16 @@ int main() {
     insertVertex(g, 'C');
     insertVertex(g, 'D');
 
+//    printf("%c\n", g->next->vertex);
+//    printf("%c\n",g->next->next->vertex);
+//    printf("%c\n",g->next->next->next->vertex);
+//    printf("%c\n",g->next->next->next->next->vertex);
+
 //    insertEdge(g, 'A', 'B');
 //    insertEdge(g, 'A', 'E');
 //
-//    removeVertex(g, 'A');
-//    insertVertex(g, 'A');
+    removeVertex(g, 'A');
+    insertVertex(g, 'A');
 //
 //    insertEdge(g, 'A', 'B');
 //    insertEdge(g, 'A', 'E');
@@ -27,7 +32,7 @@ int main() {
 //    neighbours(graph, 'A');
 //
 //    printf("Edges: %d\n", edgeSize(graph));
-    printf("Vertexes: %d\n", vertexSize(graph));
+//    printf("Vertexes: %d\n", vertexSize(graph));
 //
 //    endGraph(g);
     return 0;

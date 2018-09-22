@@ -92,28 +92,27 @@ int vertexSize(Graph g){
 //    g->matrix[v2][v1]--;
 //    g->edges--;
 //}
-//
-//void removeVertex(Graph *g, char v){
-//    if (!hasVertex(g, v)) return defaultErrorMessage();
-//    int i, j, k, n_edges, vertex = to_int(v);
-//
-//    // iterate through the entire matrix cleaning connections to the vertex we're removing
-//    for (i = 0; i < MAX_SIZE; i++){
-//        if (g->vertexes[i] != 0){ // skipping nonexistent vertexes
-//            for (j = 0; j < MAX_SIZE; j++){
-//                if (i == vertex || j == vertex){ // if it's the vertex we're trying to remove
-//                    n_edges = g->matrix[i][j];
-//                    for (k = 0; k < n_edges; k++) removeEdge(g, to_char(i), to_char(j));
-//                }
-//            }
-//        }
-//    }
-//
-//    g->vertexes[vertex] = 0;
-//    // free the correspondent matrix array as it was removed therefore there's no edge connecting them
-//    free(g->matrix[vertex]);
-//}
-//
+
+void removeVertex(Graph *g, char v){
+    if (!hasVertex(g, v)) return defaultErrorMessage();
+
+    // find the vertex
+    Graph *previous = g;
+    while(1){
+        if (g->vertex == v) break;
+        previous = g;
+        g = g->next;
+    }
+
+    // remove and free the correspondent edges of the removed vertex
+    // removeEdges(g);
+
+    // with all edges removed we're safe to remove and free the given vertex
+    previous->next = g->next;
+    free(g);
+
+}
+
 //void endGraph(Graph *g){
 //    // free the matrix
 //    for (int i = 0; i < MAX_SIZE; i++)
