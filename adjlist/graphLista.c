@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "graphMatriz.h"
+#include "graphLista.h"
 
 /* There are 26 uppercase letters available in ASCII table
 *  as they're going to be used as vertexes indexes, we can restrict

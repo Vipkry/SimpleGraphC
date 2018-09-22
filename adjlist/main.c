@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "graphMatriz.h"
+#include "graphLista.h"
 
 int main() {
     Graph graph = initGraph();
