@@ -13,7 +13,7 @@ void defaultErrorMessage(){
 int hasVertex(Graph *g, char c){
     while(g != NULL){
         if (g->vertex == c) return 1;
-        g = g->next;
+        g = g->next_vertex;
     }
     return 0;
 }
@@ -21,32 +21,92 @@ int hasVertex(Graph *g, char c){
 Graph initGraph(){
     Graph* g  = (Graph *) malloc(sizeof(Graph));
     g->vertex = '\0'; // first vertex will always be \0 for simplification purposes
+    g->edges = 0;
     return *g;
+}
+
+Graph* findVertex(Graph *g, char v){
+    while (g != NULL){
+        if(g->vertex == v) return g;
+        g = g->next_vertex;
+    }
+
+    defaultErrorMessage();
+    return NULL;
+
+}
+
+Edge* findEdgeFromVertex(Graph *g, char v){
+    Edge *edge = g->edges;
+    while(edge != NULL && edge->neighbor != v) edge = edge->next_edge;
+    return edge;
 }
 
 void insertVertex(Graph *g, char v){
     if (hasVertex(g, v)) return defaultErrorMessage();
     // get the latest vertex
-    while (g->next != NULL) g = g->next;
+    while (g->next_vertex != NULL) g = g->next_vertex;
 
     Graph *newGraph = (Graph *) malloc(sizeof(Graph));
     newGraph->vertex = v;
-    g->next = newGraph;
+    newGraph->next_vertex = NULL;
+    g->next_vertex = newGraph;
 }
 
-//void insertEdge(Graph *g, char v, char u){
-//    if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
-//
-//    int v1 = to_int(v), v2 = to_int(u);
-//    g->matrix[v1][v2]++;
-//    g->matrix[v2][v1]++;
-//    g->edges++;
-//}
-//
+void insertEdgeToVertex(Graph *g, char new_neighbor){
+    // check if edge already exists
+    Edge *new_edge = findEdgeFromVertex(g, new_neighbor);
+
+    if (new_edge != NULL){
+        // if the edge already exists just increment the number of edges
+        new_edge->n_edges++;
+    }else {
+        // crete new edge
+        new_edge = (Edge *) malloc(sizeof(Edge));
+        new_edge->neighbor = new_neighbor;
+        new_edge->n_edges = 1;
+
+        // find last_edge
+        Edge *last_edge = g->edges;
+        if (last_edge != NULL){
+            while(last_edge->next_edge != NULL) last_edge = last_edge->next_edge;
+            //insert new edge
+            last_edge->next_edge = new_edge;
+        }else {
+            g->edges = new_edge;
+        }
+
+    }
+
+}
+
+void insertEdge(Graph *g, char v, char u){
+    // locate v vertex
+    Graph *v_vertex = findVertex(g, v);
+    // locate u vertex
+    Graph *u_vertex = findVertex(g, u);
+
+    if (u_vertex == NULL || v_vertex == NULL) return;
+
+    // in case we want directional edges representations, just change lines below.
+    // insert edge connecting v -> u
+    insertEdgeToVertex(v_vertex, u);
+//     insert edge connecting u -> v
+    insertEdgeToVertex(u_vertex, v);
+
+    g->total_edges++;
+}
+
 int vertexSize(Graph g){
     Graph* graph = &g;
     int i;
-    for(i = -1; graph != NULL; graph = graph->next, i++);
+    for(i = -1; graph != NULL; graph = graph->next_vertex, i++);
+//    i = -1;
+//    while(graph != NULL){
+//        printf("%c\n", graph->vertex);
+//        graph = graph->next_vertex;
+//        i++;
+//    }
     return i;
 }
 //
@@ -101,14 +161,14 @@ void removeVertex(Graph *g, char v){
     while(1){
         if (g->vertex == v) break;
         previous = g;
-        g = g->next;
+        g = g->next_vertex;
     }
 
     // remove and free the correspondent edges of the removed vertex
     // removeEdges(g);
 
     // with all edges removed we're safe to remove and free the given vertex
-    previous->next = g->next;
+    previous->next_vertex = g->next_vertex;
     free(g);
 
 }
