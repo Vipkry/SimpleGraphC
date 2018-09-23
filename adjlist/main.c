@@ -27,12 +27,12 @@ int main() {
     insertEdge(g, 'E', 'C');
     insertEdge(g, 'A', 'A');
 
-//    printf("A->B: %d\n", isNeighbour(graph, 'A', 'B'));
-//    printf("E->B: %d\n", isNeighbour(graph, 'E', 'B'));
+    printf("A->B: %d\n", isNeighbour(graph, 'A', 'B'));
+    printf("E->B: %d\n", isNeighbour(graph, 'E', 'B'));
 //
 //    neighbours(graph, 'A');
 //
-//    printf("Edges: %d\n", edgeSize(graph));
+    printf("Edges: %d\n", edgeSize(graph));
     printf("Vertexes: %d\n", vertexSize(graph));
 //
 //    endGraph(g);

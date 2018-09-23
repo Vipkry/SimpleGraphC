@@ -94,39 +94,35 @@ void insertEdge(Graph *g, char v, char u){
 //     insert edge connecting u -> v
     insertEdgeToVertex(u_vertex, v);
 
-    g->total_edges++;
+    g->total_edges += 2;
 }
 
 int vertexSize(Graph g){
     Graph* graph = &g;
     int i;
     for(i = -1; graph != NULL; graph = graph->next_vertex, i++);
-//    i = -1;
-//    while(graph != NULL){
-//        printf("%c\n", graph->vertex);
-//        graph = graph->next_vertex;
-//        i++;
-//    }
     return i;
 }
-//
-//int edgeSize(Graph g){
-//    Graph* graph = &g;
-//    return graph->edges;
-//}
-//
-//int isNeighbour(Graph g, char v, char u){
-//    Graph* graph = &g;
-//
-//    if (!hasVertex(graph, v) || !hasVertex(graph, u)){
-//        defaultErrorMessage();
-//        return 0;
-//    }
-//
-//    int i = to_int(v), j = to_int(u);
-//    return graph->matrix[i][j];
-//}
-//
+
+int edgeSize(Graph g){
+    Graph* graph = &g;
+    // return graph->edges in case of directional edges
+    return graph->total_edges / 2;
+}
+
+int isNeighbour(Graph g, char v, char u){
+    // locate v vertex
+    Graph *v_vertex = findVertex(&g, v);
+    // locate u vertex
+    Graph *u_vertex = findVertex(&g, u);
+
+    if (u_vertex == NULL || v_vertex == NULL) return 0;
+
+    Edge *edge = findEdgeFromVertex(v_vertex, u);
+
+    return edge != NULL ? 1 : 0;
+}
+
 //void neighbours(Graph g, char v){
 //    Graph* graph = &g;
 //    if (!hasVertex(graph, v)) return defaultErrorMessage();
