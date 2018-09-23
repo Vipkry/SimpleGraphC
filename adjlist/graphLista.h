@@ -6,7 +6,7 @@ struct vertex_node {
 };
 
 struct edge_node {
-    char neighbor;
+    char neighbour;
     int n_edges;
     struct edge_node* next_edge;
 };

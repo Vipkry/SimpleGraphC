@@ -38,7 +38,7 @@ Graph* findVertex(Graph *g, char v){
 
 Edge* findEdgeFromVertex(Graph *g, char v){
     Edge *edge = g->edges;
-    while(edge != NULL && edge->neighbor != v) edge = edge->next_edge;
+    while(edge != NULL && edge->neighbour != v) edge = edge->next_edge;
     return edge;
 }
 
@@ -53,9 +53,9 @@ void insertVertex(Graph *g, char v){
     g->next_vertex = newGraph;
 }
 
-void insertEdgeToVertex(Graph *g, char new_neighbor){
+void insertEdgeToVertex(Graph *g, char new_neighbour){
     // check if edge already exists
-    Edge *new_edge = findEdgeFromVertex(g, new_neighbor);
+    Edge *new_edge = findEdgeFromVertex(g, new_neighbour);
 
     if (new_edge != NULL){
         // if the edge already exists just increment the number of edges
@@ -63,7 +63,7 @@ void insertEdgeToVertex(Graph *g, char new_neighbor){
     }else {
         // crete new edge
         new_edge = (Edge *) malloc(sizeof(Edge));
-        new_edge->neighbor = new_neighbor;
+        new_edge->neighbour = new_neighbour;
         new_edge->n_edges = 1;
 
         // find last_edge
