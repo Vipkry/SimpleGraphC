@@ -75,9 +75,7 @@ void insertEdgeToVertex(Graph *g, char new_neighbour){
         }else {
             g->edges = new_edge;
         }
-
     }
-
 }
 
 void insertEdge(Graph *g, char v, char u){
@@ -88,13 +86,14 @@ void insertEdge(Graph *g, char v, char u){
 
     if (u_vertex == NULL || v_vertex == NULL) return;
 
-    // in case we want directional edges representations, just change lines below.
     // insert edge connecting v -> u
     insertEdgeToVertex(v_vertex, u);
-//     insert edge connecting u -> v
-    insertEdgeToVertex(u_vertex, v);
 
-    g->total_edges += 2;
+    // insert edge connecting u -> v
+    // unless in case of u == v, we would be inserting duplicates otherwise
+    // insertEdgeToVertex(u_vertex, v);
+
+    g->total_edges++;
 }
 
 int vertexSize(Graph g){
@@ -106,8 +105,7 @@ int vertexSize(Graph g){
 
 int edgeSize(Graph g){
     Graph* graph = &g;
-    // return graph->edges in case of directional edges
-    return graph->total_edges / 2;
+    return graph->total_edges;
 }
 
 int isNeighbour(Graph g, char v, char u){
@@ -123,18 +121,17 @@ int isNeighbour(Graph g, char v, char u){
     return edge != NULL ? 1 : 0;
 }
 
-//void neighbours(Graph g, char v){
-//    Graph* graph = &g;
-//    if (!hasVertex(graph, v)) return defaultErrorMessage();
-//
-//    int i, vertex = to_int(v);
-//    for (i = 0; i < MAX_SIZE; i++){
-//        if (graph->matrix[vertex][i] != 0){
-//            printf("%c is %c neighbour\n", to_char(i), v);
-//        }
-//    }
-//}
-//
+void neighbours(Graph g, char v){
+    Graph *v_vertex = findVertex(&g, v);
+    if (v_vertex == NULL) return;
+
+    Edge *edge = v_vertex->edges;
+    while(edge != NULL){
+        printf("%c is %c neighbour\n", edge->neighbour, v);
+        edge = edge->next_edge;
+    }
+}
+
 //void removeEdge(Graph *g, char v, char u){
 //    if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
 //    int v1 = to_int(v), v2 = to_int(u);
