@@ -27,6 +27,8 @@ Graph initGraph(){
     return *g;
 }
 
+
+/* Find and returns vertex in given graph */
 Graph* findVertex(Graph *g, char v){
     while (g != NULL){
         if(g->vertex == v) return g;
@@ -38,6 +40,7 @@ Graph* findVertex(Graph *g, char v){
 
 }
 
+/* Find edge in given edge */
 Edge* findEdgeFromVertex(Graph *g, char v){
     Edge *edge = g->edges;
     while(edge != NULL && edge->neighbour != v) edge = edge->next_edge;
@@ -55,6 +58,8 @@ void insertVertex(Graph *g, char v){
     g->next_vertex = newGraph;
 }
 
+/* Aux function to help insertEdge function.
+ * will insert only one edge with g as origin and new_neighbour as destination*/
 void insertEdgeToVertex(Graph *g, char new_neighbour){
     // check if edge already exists
     Edge *new_edge = findEdgeFromVertex(g, new_neighbour);
@@ -69,9 +74,9 @@ void insertEdgeToVertex(Graph *g, char new_neighbour){
         new_edge->n_edges = 1;
         new_edge->next_edge = NULL;
 
-        // find last_edge
         Edge *last_edge = g->edges;
         if (last_edge != NULL){
+            // find last_edge
             while(last_edge->next_edge != NULL) last_edge = last_edge->next_edge;
             //insert new edge
             last_edge->next_edge = new_edge;
@@ -102,13 +107,14 @@ void insertEdge(Graph *g, char v, char u){
 int vertexSize(Graph g){
     Graph* graph = &g;
     int i;
+    // loop though the list ignoring the root ('\0').
     for(i = -1; graph != NULL; graph = graph->next_vertex, i++);
     return i;
 }
 
 int edgeSize(Graph g){
     Graph* graph = &g;
-    return graph->total_edges;
+    return graph->total_edges; //just get the stored value, that will be O(1) instead of O(n*m)
 }
 
 int isNeighbour(Graph g, char v, char u){
@@ -135,6 +141,8 @@ void neighbours(Graph g, char v){
     }
 }
 
+/* Removes single edge without worrying about it's pair in the unidirectional graph
+ * specially useful for edges with same origin and destination */
 void removeSingleEdge(Graph *vertex, Edge* edge_to_remove){
     if(edge_to_remove == NULL){
         printf("Skipping a nonexistent edge removal\n");
@@ -142,15 +150,18 @@ void removeSingleEdge(Graph *vertex, Edge* edge_to_remove){
     }
 
     // find previous edge
-    Edge *previous = NULL, *edge = vertex->edges;
+    Edge *previous = NULL, *edge = vertex->edges; // *edge is only an aux var here
     while(edge->neighbour != edge_to_remove->neighbour) { previous = edge; edge = edge->next_edge; }
 
     if (edge_to_remove->n_edges == 1){
-        if (previous == NULL) vertex->edges = edge_to_remove->next_edge; // in case it's the first edge
+        // in case it's the first edge set vertex ptr to next_edge
+        if (previous == NULL) vertex->edges = edge_to_remove->next_edge;
+        // else: it's not the first edge of the vertex so just skip it in the edges list of that vertex
         else previous->next_edge = edge_to_remove->next_edge;
+
         free(edge_to_remove);
     }else {
-        edge_to_remove->n_edges--;
+        edge_to_remove->n_edges--; // in case of multiple edges
     }
 
 }
@@ -189,8 +200,7 @@ void removeVertex(Graph *g, char v){
     }
 
     // remove and free the correspondent edges of the removed vertex
-    while(g->edges != NULL)
-        removeEdge(root, g->vertex, g->edges->neighbour);
+    while(g->edges != NULL) removeEdge(root, g->vertex, g->edges->neighbour);
 
     // with all edges removed we're safe to remove and free the given vertex
     previous->next_vertex = g->next_vertex;
