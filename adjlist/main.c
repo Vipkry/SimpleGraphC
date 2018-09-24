@@ -12,25 +12,27 @@ int main() {
     insertVertex(g, 'D');
     insertVertex(g, 'B');
 
-//    insertEdge(g, 'A', 'B');
-//    insertEdge(g, 'A', 'E');
+    insertEdge(g, 'A', 'B');
+    insertEdge(g, 'A', 'E');
 
-//    removeVertex(g, 'A');
-//    insertVertex(g, 'A');
+    removeVertex(g, 'A');
+    insertVertex(g, 'A');
 
     printf("%c\n", g->next_vertex->vertex);
-    printf("%c\n",g->next_vertex->next_vertex->vertex);
-    printf("%c\n",g->next_vertex->next_vertex->next_vertex->vertex);
-    printf("%c\n",g->next_vertex->next_vertex->next_vertex->next_vertex->vertex);
+    printf("%c\n", g->next_vertex->next_vertex->vertex);
+    printf("%c\n", g->next_vertex->next_vertex->next_vertex->vertex);
+    printf("%c\n", g->next_vertex->next_vertex->next_vertex->next_vertex->vertex);
 
     insertEdge(g, 'A', 'B');
     insertEdge(g, 'A', 'C');
     insertEdge(g, 'E', 'C');
     insertEdge(g, 'A', 'A');
+    insertEdge(g, 'A', 'B');
 
-    removeEdge(g, 'A', 'B');
-    removeEdge(g, 'A', 'C');
+    removeVertex(g, 'A');
+    insertVertex(g, 'A');
 
+    insertEdge(g, 'A', 'A');
     insertEdge(g, 'A', 'B');
 
     printf("A->B: %d\n", isNeighbour(graph, 'A', 'B'));

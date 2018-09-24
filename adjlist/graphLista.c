@@ -22,6 +22,8 @@ Graph initGraph(){
     Graph* g  = (Graph *) malloc(sizeof(Graph));
     g->vertex = '\0'; // first vertex will always be \0 for simplification purposes
     g->edges = 0;
+    g->edges = NULL;
+    g->next_vertex = NULL;
     return *g;
 }
 
@@ -176,6 +178,8 @@ void removeEdge(Graph *g, char v, char u){
 void removeVertex(Graph *g, char v){
     if (!hasVertex(g, v)) return defaultErrorMessage();
 
+    Graph *root = g;
+
     // find the vertex
     Graph *previous = g;
     while(1){
@@ -185,7 +189,8 @@ void removeVertex(Graph *g, char v){
     }
 
     // remove and free the correspondent edges of the removed vertex
-    // todo: removeEdgesFromVertex(g);
+    while(g->edges != NULL)
+        removeEdge(root, g->vertex, g->edges->neighbour);
 
     // with all edges removed we're safe to remove and free the given vertex
     previous->next_vertex = g->next_vertex;
