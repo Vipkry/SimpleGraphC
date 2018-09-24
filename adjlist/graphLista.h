@@ -1,3 +1,8 @@
+// This graph implementation uses char type to index vertexes, therefore limited to it.
+// the ROOT_VERTEX is used to index the root node of the vertexes.
+// Don't index any vertex as the ROOT_VERTEX index.
+#define ROOT_VERTEX '\0'
+
 struct vertex_node {
     char vertex;
     int total_edges;

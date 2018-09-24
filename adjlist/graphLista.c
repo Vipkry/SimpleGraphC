@@ -20,7 +20,7 @@ int hasVertex(Graph *g, char c){
 
 Graph initGraph(){
     Graph* g  = (Graph *) malloc(sizeof(Graph));
-    g->vertex = '\0'; // first vertex will always be \0 for simplification purposes
+    g->vertex = ROOT_VERTEX; // first vertex will always be ROOT_VERTEX for simplification purposes
     g->edges = 0;
     g->edges = NULL;
     g->next_vertex = NULL;
