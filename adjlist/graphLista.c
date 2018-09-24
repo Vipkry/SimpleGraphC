@@ -65,6 +65,7 @@ void insertEdgeToVertex(Graph *g, char new_neighbour){
         new_edge = (Edge *) malloc(sizeof(Edge));
         new_edge->neighbour = new_neighbour;
         new_edge->n_edges = 1;
+        new_edge->next_edge = NULL;
 
         // find last_edge
         Edge *last_edge = g->edges;
@@ -91,7 +92,7 @@ void insertEdge(Graph *g, char v, char u){
 
     // insert edge connecting u -> v
     // unless in case of u == v, we would be inserting duplicates otherwise
-    // insertEdgeToVertex(u_vertex, v);
+    if (u != v) insertEdgeToVertex(u_vertex, v);
 
     g->total_edges++;
 }
@@ -122,29 +123,55 @@ int isNeighbour(Graph g, char v, char u){
 }
 
 void neighbours(Graph g, char v){
-    Graph *v_vertex = findVertex(&g, v);
-    if (v_vertex == NULL) return;
+    Graph *vertex = findVertex(&g, v);
+    if (vertex == NULL) return;
 
-    Edge *edge = v_vertex->edges;
+    Edge *edge = vertex->edges;
     while(edge != NULL){
         printf("%c is %c neighbour\n", edge->neighbour, v);
         edge = edge->next_edge;
     }
 }
 
-//void removeEdge(Graph *g, char v, char u){
-//    if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
-//    int v1 = to_int(v), v2 = to_int(u);
-//
-//    if(g->matrix[v1][v2] == 0){
-//        printf("Skipping nonexistent edge removal\n");
-//        return;
-//    }
-//
-//    g->matrix[v1][v2]--;
-//    g->matrix[v2][v1]--;
-//    g->edges--;
-//}
+void removeSingleEdge(Graph *vertex, Edge* edge_to_remove){
+    if(edge_to_remove == NULL){
+        printf("Skipping a nonexistent edge removal\n");
+        return;
+    }
+
+    // find previous edge
+    Edge *previous = NULL, *edge = vertex->edges;
+    while(edge->neighbour != edge_to_remove->neighbour) { previous = edge; edge = edge->next_edge; }
+
+    if (edge_to_remove->n_edges == 1){
+        if (previous == NULL) vertex->edges = edge_to_remove->next_edge; // in case it's the first edge
+        else previous->next_edge = edge_to_remove->next_edge;
+        free(edge_to_remove);
+    }else {
+        edge_to_remove->n_edges--;
+    }
+
+}
+
+void removeEdge(Graph *g, char v, char u){
+    // locate v vertex
+    Graph *v_vertex = findVertex(g, v);
+    // locate u vertex
+    Graph *u_vertex = findVertex(g, u);
+
+    if (u_vertex == NULL || v_vertex == NULL) return;
+
+    Edge *v_to_u_edge = findEdgeFromVertex(v_vertex, u);
+    Edge *u_to_v_edge = findEdgeFromVertex(u_vertex, v);
+
+    // remove v_to_u edge
+    removeSingleEdge(v_vertex, v_to_u_edge);
+
+    // remove u_to_v edge
+    if (u != v) removeSingleEdge(u_vertex, u_to_v_edge);
+
+    g->total_edges--;
+}
 
 void removeVertex(Graph *g, char v){
     if (!hasVertex(g, v)) return defaultErrorMessage();
@@ -158,7 +185,7 @@ void removeVertex(Graph *g, char v){
     }
 
     // remove and free the correspondent edges of the removed vertex
-    // removeEdges(g);
+    // todo: removeEdgesFromVertex(g);
 
     // with all edges removed we're safe to remove and free the given vertex
     previous->next_vertex = g->next_vertex;
