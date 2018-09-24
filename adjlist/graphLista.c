@@ -198,13 +198,7 @@ void removeVertex(Graph *g, char v){
 
 }
 
-//void endGraph(Graph *g){
-//    // free the matrix
-//    for (int i = 0; i < MAX_SIZE; i++)
-//        // vertexes set to zero means they're not initialized or have already been freed
-//        if (g->vertexes[i] != 0)
-//            free(g->matrix[i]);
-//
-//    free(g->matrix);
-//    free(g->vertexes);
-//}
+void endGraph(Graph *g){
+    while(g->next_vertex)
+        removeVertex(g, g->next_vertex->vertex);
+}

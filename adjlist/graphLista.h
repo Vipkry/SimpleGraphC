@@ -23,4 +23,4 @@ int isNeighbour(Graph g, char v, char u);
 void neighbours(Graph g, char v);
 int vertexSize(Graph g);
 int edgeSize(Graph g);
-//void endGraph(Graph *g);
+void endGraph(Graph *g);

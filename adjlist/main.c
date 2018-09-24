@@ -43,6 +43,6 @@ int main() {
     printf("Edges: %d\n", edgeSize(graph));
     printf("Vertexes: %d\n", vertexSize(graph));
 
-//    endGraph(g);
+    endGraph(g);
     return 0;
 }
