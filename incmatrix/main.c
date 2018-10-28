@@ -10,7 +10,7 @@ int main() {
     insertVertex(g, 'B');
     insertVertex(g, 'E');
 //    insertVertex(g, 'D');
-    //
+
     insertEdge(g, 'A', 'B');
 //    insertEdge(g, 'A', 'E');
 //
@@ -26,7 +26,7 @@ int main() {
 //
 //    neighbours(graph, 'A');
 //
-//    printf("Edges: %d\n", edgeSize(graph));
+    printf("Edges: %d\n", edgeSize(graph));
     printf("Vertexes: %d\n", vertexSize(graph));
 
 //    endGraph(g);

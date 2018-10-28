@@ -77,10 +77,10 @@ int vertexSize(Graph g){
     return counter;
 }
 
-//int edgeSize(Graph g){
-//    Graph* graph = &g;
-//    return graph->edges;
-//}
+int edgeSize(Graph g){
+    Graph* graph = &g;
+    return graph->edges;
+}
 
 //int isNeighbour(Graph g, char v, char u){
 //    Graph* graph = &g;
