@@ -82,17 +82,32 @@ int edgeSize(Graph g){
     return graph->edges;
 }
 
-//int isNeighbour(Graph g, char v, char u){
-//    Graph* graph = &g;
-//
-//    if (!hasVertex(graph, v) || !hasVertex(graph, u)){
-//        defaultErrorMessage();
-//        return 0;
-//    }
-//
-//    int i = to_int(v), j = to_int(u);
-//    return graph->matrix[i][j];
-//}
+int isNeighbour(Graph g, char v, char u){
+    Graph* graph = &g;
+
+    if (!hasVertex(graph, v) || !hasVertex(graph, u)){
+        defaultErrorMessage();
+        return 0;
+    }
+
+    int i, j, v1 = to_int(v), v2 = to_int(u);
+
+    // for each edge
+    for (i = 0; i < graph->edges; i++){
+        // if that edge reaches a given vertex
+        if (graph->matrix[i][v1]){
+            // search for it's neighbours and check if it's a match
+            for(j = 0; j < MAX_SIZE; j++){
+                if (graph->matrix[i][j] && j == v2){
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+
+}
 
 void neighbours(Graph g, char v){
     Graph* graph = &g;
