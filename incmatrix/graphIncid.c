@@ -94,17 +94,26 @@ int edgeSize(Graph g){
 //    return graph->matrix[i][j];
 //}
 
-//void neighbours(Graph g, char v){
-//    Graph* graph = &g;
-//    if (!hasVertex(graph, v)) return defaultErrorMessage();
-//
-//    int i, vertex = to_int(v);
-//    for (i = 0; i < MAX_SIZE; i++){
-//        if (graph->matrix[vertex][i] != 0){
-//            printf("%c is %c neighbour\n", to_char(i), v);
-//        }
-//    }
-//}
+void neighbours(Graph g, char v){
+    Graph* graph = &g;
+
+    if (!hasVertex(graph, v)) return defaultErrorMessage();
+
+    int i, j, vertex = to_int(v);
+
+    // for each edge
+    for (i = 0; i < graph->edges; i++){
+        // if that edge reaches the given vertex
+        if (graph->matrix[i][vertex]){
+            // search for it's neighbour
+            for(j = 0; j < MAX_SIZE; j++){
+                if (graph->matrix[i][j] && j != vertex){
+                    printf("%c is %c neighbour\n", to_char(j), v);
+                }
+            }
+        }
+    }
+}
 
 //void removeEdge(Graph *g, char v, char u){
 //    if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
