@@ -27,63 +27,61 @@ char to_char(int i){
 }
 
 /* Check if vertex exists in given graph */
-//int hasVertex(Graph *g, char c){
-//    int vertex = to_int(c);
-//    return g->vertexes[vertex];
-//}
+int hasVertex(Graph *g, char c){
+    int vertex = to_int(c);
+    return g->vertexes[vertex];
+}
 
 /* initGraph helper for initializing vertexes list */
-//int* initializeVertexes(){
-//    int* vertexes = (int *) malloc(sizeof(int) * MAX_SIZE);
-//
+int* initializeVertexes(){
+    int* vertexes = (int *) malloc(sizeof(int) * MAX_SIZE);
+
 //     0 -> vertex not inserted
 //     1 -> vertex inserted
 //
-//    for(int i = 0; i < MAX_SIZE; i++) vertexes[i] = 0;
-//    return vertexes;
-//}
+    for(int i = 0; i < MAX_SIZE; i++) vertexes[i] = 0;
+    return vertexes;
+}
 
 Graph initGraph(){
-    Graph* g  = (Graph *) malloc(sizeof(Graph));
-    g->matrix = (int **) malloc(sizeof(int *) * MAX_SIZE);
-//    g->vertexes = initializeVertexes();
-//    g->edges = 0;
+    Graph* g = (Graph *) malloc(sizeof(Graph));
+    g->vertexes = initializeVertexes();
+    g->edges = 0;
     return *g;
 }
 
-//void insertVertex(Graph *g, char v){
-//    if (hasVertex(g, v)) return defaultErrorMessage();
-//
-//    int vertex = to_int(v);
-//    g->matrix[vertex] = (int *) malloc(sizeof(int *) * MAX_SIZE);
-//    for(int i = 0; i < MAX_SIZE; i++) g->matrix[vertex][i] = 0; // sets initial neighbors
-//    g->vertexes[vertex] = 1;
-//}
-//
-//void insertEdge(Graph *g, char v, char u){
-//    if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
-//
-//    int v1 = to_int(v), v2 = to_int(u);
-//    g->matrix[v1][v2]++;
-//    g->matrix[v2][v1]++;
-//    g->edges++;
-//}
-//
-//int vertexSize(Graph g){
-//    Graph* graph = &g;
-//    int counter = 0, i = 0;
-//     vertexes set to one means they have been initialized, therefore are part of the graph
-//    for(i; i < MAX_SIZE; i++)
-//        if (graph->vertexes[i] == 1)
-//            counter++;
-//    return counter;
-//}
-//
+void insertVertex(Graph *g, char v){
+    if (hasVertex(g, v)) return defaultErrorMessage();
+    int vertex = to_int(v);
+    g->vertexes[vertex] = 1;
+}
+
+void insertEdge(Graph *g, char v, char u){
+    if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
+
+    int v1 = to_int(v), v2 = to_int(u);
+    g->edges++;
+    g->matrix = (int **) realloc(g->matrix, g->edges);
+    g->matrix[g->edges - 1] = (int *) malloc(sizeof(int) * MAX_SIZE);
+    g->matrix[g->edges - 1][v1] = 1;
+    g->matrix[g->edges - 1][v2] = 1;
+}
+
+int vertexSize(Graph g){
+    Graph* graph = &g;
+    int counter = 0, i = 0;
+    // vertexes set to one means they have been initialized, therefore are part of the graph
+    for(i; i < MAX_SIZE; i++)
+        if (graph->vertexes[i] == 1)
+            counter++;
+    return counter;
+}
+
 //int edgeSize(Graph g){
 //    Graph* graph = &g;
 //    return graph->edges;
 //}
-//
+
 //int isNeighbour(Graph g, char v, char u){
 //    Graph* graph = &g;
 //
@@ -95,7 +93,7 @@ Graph initGraph(){
 //    int i = to_int(v), j = to_int(u);
 //    return graph->matrix[i][j];
 //}
-//
+
 //void neighbours(Graph g, char v){
 //    Graph* graph = &g;
 //    if (!hasVertex(graph, v)) return defaultErrorMessage();
@@ -107,7 +105,7 @@ Graph initGraph(){
 //        }
 //    }
 //}
-//
+
 //void removeEdge(Graph *g, char v, char u){
 //    if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
 //    int v1 = to_int(v), v2 = to_int(u);
@@ -121,7 +119,7 @@ Graph initGraph(){
 //    g->matrix[v2][v1]--;
 //    g->edges--;
 //}
-//
+
 //void removeVertex(Graph *g, char v){
 //    if (!hasVertex(g, v)) return defaultErrorMessage();
 //    int i, j, k, n_edges, vertex = to_int(v);
@@ -137,7 +135,7 @@ Graph initGraph(){
 //            }
 //        }
 //    }
-//
+
 //    g->vertexes[vertex] = 0;
     // free the correspondent matrix array as it was removed therefore there's no edge connecting them
 //    free(g->matrix[vertex]);

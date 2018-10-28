@@ -4,14 +4,14 @@
 
 int main() {
     Graph graph = initGraph();
-//    Graph *g = &graph;
-//
-//    insertVertex(g, 'A');
-//    insertVertex(g, 'B');
-//    insertVertex(g, 'E');
+    Graph *g = &graph;
+
+    insertVertex(g, 'A');
+    insertVertex(g, 'B');
+    insertVertex(g, 'E');
 //    insertVertex(g, 'D');
-//
-//    insertEdge(g, 'A', 'B');
+    //
+    insertEdge(g, 'A', 'B');
 //    insertEdge(g, 'A', 'E');
 //
 //    removeVertex(g, 'A');
@@ -27,8 +27,8 @@ int main() {
 //    neighbours(graph, 'A');
 //
 //    printf("Edges: %d\n", edgeSize(graph));
-//    printf("Vertexes: %d\n", vertexSize(graph));
-//
+    printf("Vertexes: %d\n", vertexSize(graph));
+
 //    endGraph(g);
     return 0;
 }
