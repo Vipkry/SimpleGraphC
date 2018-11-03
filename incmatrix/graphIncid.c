@@ -153,26 +153,35 @@ void removeEdge(Graph *g, char v, char u){
     g->matrix = (int **) realloc(g->matrix, g->edges);
 }
 
-//void removeVertex(Graph *g, char v){
-//    if (!hasVertex(g, v)) return defaultErrorMessage();
-//    int i, j, k, n_edges, vertex = to_int(v);
-//
-//     iterate through the entire matrix cleaning connections to the vertex we're removing
-//    for (i = 0; i < MAX_ROW_SIZE; i++){
-//        if (g->vertexes[i] != 0){ // skipping nonexistent vertexes
-//            for (j = 0; j < MAX_ROW_SIZE; j++){
-//                if (i == vertex || j == vertex){ // if it's the vertex we're trying to remove
-//                    n_edges = g->matrix[i][j];
-//                    for (k = 0; k < n_edges; k++) removeEdge(g, to_char(i), to_char(j));
-//                }
-//            }
-//        }
-//    }
+void removeEdgeByIndex(Graph *g, int index, int vertex){
+    for (int i = 0; i < MAX_ROW_SIZE; i++){
+        if (i != vertex && g->matrix[index][i] > 0){
+            removeEdge(g, to_char(vertex), to_char(i));
+            return;
+        }
+    }
 
-//    g->vertexes[vertex] = 0;
-    // free the correspondent matrix array as it was removed therefore there's no edge connecting them
-//    free(g->matrix[vertex]);
-//}
+}
+
+void removeVertex(Graph *g, char v) {
+    if (!hasVertex(g, v)) return defaultErrorMessage();
+    int vertex = to_int(v), i, aux = 1;
+
+    // remove all edges related to the given vertex
+    while(aux == 1) {
+        aux = 0;
+        for (i = 0; i < g->edges; i++) {
+            if (g->matrix[i][vertex] > 0) {
+                removeEdgeByIndex(g, i, vertex);
+                aux = 1;
+                break;
+            }
+        }
+    }
+
+    g->vertexes[vertex] = 0;
+
+}
 
 //void endGraph(Graph *g){
     // free the matrix
