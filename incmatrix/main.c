@@ -9,10 +9,15 @@ int main() {
     insertVertex(g, 'A');
     insertVertex(g, 'B');
     insertVertex(g, 'E');
-//    insertVertex(g, 'D');
+    insertVertex(g, 'D');
 
     insertEdge(g, 'A', 'B');
-//    insertEdge(g, 'A', 'E');
+
+    removeEdge(g, 'A', 'B');
+
+    insertEdge(g, 'A', 'E');
+    insertEdge(g, 'B', 'E');
+    insertEdge(g, 'B', 'A');
 
 //    removeVertex(g, 'A');
 //    insertVertex(g, 'A');
@@ -25,6 +30,7 @@ int main() {
     printf("E->B: %d\n", isNeighbour(graph, 'E', 'B'));
 
     neighbours(graph, 'A');
+    neighbours(graph, 'B');
 
     printf("Edges: %d\n", edgeSize(graph));
     printf("Vertexes: %d\n", vertexSize(graph));
