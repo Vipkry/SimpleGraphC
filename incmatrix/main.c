@@ -19,12 +19,12 @@ int main() {
     insertEdge(g, 'B', 'E');
     insertEdge(g, 'B', 'A');
 
-//    removeVertex(g, 'A');
-//    insertVertex(g, 'A');
+    removeVertex(g, 'A');
+    insertVertex(g, 'A');
 
-//    insertEdge(g, 'A', 'B');
-//    insertEdge(g, 'A', 'E');
-//    insertEdge(g, 'A', 'A');
+    insertEdge(g, 'A', 'B');
+    insertEdge(g, 'A', 'E');
+    insertEdge(g, 'A', 'A');
 
     printf("A->B: %d\n", isNeighbour(graph, 'A', 'B'));
     printf("E->B: %d\n", isNeighbour(graph, 'E', 'B'));

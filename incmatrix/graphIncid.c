@@ -52,6 +52,7 @@ void insertVertex(Graph *g, char v){
 }
 
 void insertEdge(Graph *g, char v, char u){
+    // TODO: self-edges
     if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
 
     int v1 = to_int(v), v2 = to_int(u);
@@ -128,6 +129,7 @@ void neighbours(Graph g, char v){
 }
 
 void removeEdge(Graph *g, char v, char u){
+    // TODO: self-edges
     if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
     int v1 = to_int(v), v2 = to_int(u), i = 0, j = 0;
 
