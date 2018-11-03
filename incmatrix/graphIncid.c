@@ -152,20 +152,31 @@ void removeEdge(Graph *g, char v, char u){
         for (j = 0; j < MAX_ROW_SIZE; j++)
             g->matrix[i - 1][j] = g->matrix[i][j];
 
+    free(g->matrix[g->edges - 1]);
     g->edges--;
     g->matrix = (int **) realloc(g->matrix, g->edges * sizeof(int *));
 }
 
-void removeEdgeByIndex(Graph *g, int index, int vertex){
-    for (int i = 0; i < MAX_ROW_SIZE; i++){
-        // hits the other side oof the edge
-        // == 2 in case of loops
-        if ((i != vertex && g->matrix[index][i] > 0) || g->matrix[index][i] == 2){
-            removeEdge(g, to_char(vertex), to_char(i));
-            return;
+void removeEdgeByIndex(Graph *g, int index){
+    int v1 = -1, v2 = -1, i;
+
+    for (i = 0; i < MAX_ROW_SIZE; i++){
+        if (g->matrix[index][i] > 0)
+        {
+            if (g->matrix[index][i] == 2){
+                v1 = v2 = i;
+                break;
+            }else if (v1 == -1){
+                v1 = i;
+            }else{
+                v2 = i;
+                break;
+            }
         }
+
     }
 
+    removeEdge(g, to_char(v1), to_char(v2));
 }
 
 void removeVertex(Graph *g, char v) {
@@ -177,7 +188,7 @@ void removeVertex(Graph *g, char v) {
         aux = 0;
         for (i = 0; i < g->edges; i++) {
             if (g->matrix[i][vertex] > 0) {
-                removeEdgeByIndex(g, i, vertex);
+                removeEdgeByIndex(g, i);
                 aux = 1;
                 break;
             }
@@ -188,13 +199,9 @@ void removeVertex(Graph *g, char v) {
 
 }
 
-//void endGraph(Graph *g){
-    // free the matrix
-//    for (int i = 0; i < MAX_ROW_SIZE; i++)
-        // vertexes set to zero means they're not initialized or have already been freed
-//        if (g->vertexes[i] != 0)
-//            free(g->matrix[i]);
-//
-//    free(g->matrix);
-//    free(g->vertexes);
-//}
+void endGraph(Graph *g){
+    int  i;
+    for (i = g->edges - 1; i >= 0; i--)
+        removeEdgeByIndex(g, i);
+
+}
