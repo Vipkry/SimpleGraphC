@@ -14,10 +14,12 @@ int main() {
     insertEdge(g, 'A', 'B');
 
     removeEdge(g, 'A', 'B');
-
     insertEdge(g, 'A', 'E');
     insertEdge(g, 'B', 'E');
     insertEdge(g, 'B', 'A');
+    insertEdge(g, 'A', 'D');
+
+    insertEdge(g, 'A', 'A');
 
     removeVertex(g, 'A');
     insertVertex(g, 'A');

@@ -52,17 +52,19 @@ void insertVertex(Graph *g, char v){
 }
 
 void insertEdge(Graph *g, char v, char u){
-    // TODO: self-edges
     if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
 
     int v1 = to_int(v), v2 = to_int(u);
     g->edges++;
     // we could search for an existing edge before inserting, but that would increase our complexity to O(n)
     // while not searching for it has O(4) dismissing realloc complexity.
-    g->matrix = (int **) realloc(g->matrix, g->edges);
+    g->matrix = (int **) realloc(g->matrix, g->edges * sizeof(int *));
+    int last_edge_index = g->edges - 1;
     g->matrix[g->edges - 1] = (int *) malloc(sizeof(int) * MAX_ROW_SIZE);
-    g->matrix[g->edges - 1][v1] = 1;
-    g->matrix[g->edges - 1][v2] = 1;
+    g->matrix[last_edge_index][v1] = 0;
+    g->matrix[last_edge_index][v2] = 0;
+    g->matrix[last_edge_index][v1]++;
+    g->matrix[last_edge_index][v2]++;
 }
 
 int vertexSize(Graph g){
@@ -129,7 +131,6 @@ void neighbours(Graph g, char v){
 }
 
 void removeEdge(Graph *g, char v, char u){
-    // TODO: self-edges
     if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
     int v1 = to_int(v), v2 = to_int(u), i = 0, j = 0;
 
@@ -152,12 +153,14 @@ void removeEdge(Graph *g, char v, char u){
             g->matrix[i - 1][j] = g->matrix[i][j];
 
     g->edges--;
-    g->matrix = (int **) realloc(g->matrix, g->edges);
+    g->matrix = (int **) realloc(g->matrix, g->edges * sizeof(int *));
 }
 
 void removeEdgeByIndex(Graph *g, int index, int vertex){
     for (int i = 0; i < MAX_ROW_SIZE; i++){
-        if (i != vertex && g->matrix[index][i] > 0){
+        // hits the other side oof the edge
+        // == 2 in case of loops
+        if ((i != vertex && g->matrix[index][i] > 0) || g->matrix[index][i] == 2){
             removeEdge(g, to_char(vertex), to_char(i));
             return;
         }
