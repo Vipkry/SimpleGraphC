@@ -201,7 +201,10 @@ void removeVertex(Graph *g, char v) {
 
 void endGraph(Graph *g){
     int  i;
+    // remove and free all edges (realloc inside removeEdge will take care of matrix free's)
     for (i = g->edges - 1; i >= 0; i--)
         removeEdgeByIndex(g, i);
 
+    // free vertexes list
+    free(g->vertexes);
 }
