@@ -147,12 +147,13 @@ void removeEdge(Graph *g, char v, char u){
         return;
     }
 
-    // copy rows one index backwards to remove the given edge
-    for (i = edge_row_index + 1; i < g->edges; i++)
-        for (j = 0; j < MAX_ROW_SIZE; j++)
-            g->matrix[i - 1][j] = g->matrix[i][j];
+    int *row_removal_ref = g->matrix[edge_row_index];
 
-    free(g->matrix[g->edges - 1]);
+    // copy rows pointers one index backwards to remove the given edge
+    for (i = edge_row_index + 1; i < g->edges; i++)
+        g->matrix[i - 1] = g->matrix[i];
+
+    free(row_removal_ref);
     g->edges--;
     g->matrix = (int **) realloc(g->matrix, g->edges * sizeof(int *));
 }
