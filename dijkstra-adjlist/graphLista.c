@@ -1,6 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include "graphLista.h"
+
+/* Maps vertex char to int.
+*  Uppercase letters only */
+int to_int(char c){ ;
+    return (int) c - (int) 'A';
+}
+
+/* Maps vertex int to char.
+*  starting by uppercase 'A' */
+char to_char(int i){
+    return i + 'A';
+}
 
 /* Displays error message in case the program is trying to access or make use of
  * vertexes not yet initialized or re-assigning one of them */
@@ -211,4 +224,95 @@ void removeVertex(Graph *g, char v){
 void endGraph(Graph *g){
     while(g->next_vertex)
         removeVertex(g, g->next_vertex->vertex);
+}
+
+
+char* dijkstra_queue(Graph *g, char s){
+    // it's not really a queue, just a list that we are going to treat as a queue
+    char * queue = (char *) malloc(sizeof(char) * MAX_SIZE), i, k, queue_length = 1;
+
+    queue[0] = s;
+    queue[1] = '\0'; // keep track of the end of the queue as we are only returning the queue itself
+
+    // for each possible item on queue
+    for (i = 0; i < queue_length; i++)
+    {
+        Edge *next_neighbor = g->edges;
+        // for each neighbor of the given vertex in queue
+        while(next_neighbor)
+        {
+            int already_in_queue = 0;
+            // check if the neighbor is already queued
+            for (k = 0; k < queue_length; k++) if (queue[k] == next_neighbor->neighbour) already_in_queue = 1;
+            // queue him if not and increase the queue length tracker
+            if (already_in_queue == 0) {
+                queue[queue_length] = next_neighbor->neighbour;
+                queue_length++;
+                queue[queue_length] = '\0';
+            }
+
+            next_neighbor = next_neighbor->next_edge;
+        }
+    }
+
+    return queue;
+
+}
+
+void dijkstra(Graph *g, char s){
+    if (!hasVertex(g, s)) return defaultErrorMessage();
+
+    int i, dist_adj;
+    Graph *x;
+
+    char* queue      = dijkstra_queue(g, s);
+    char* prev       = (char *) malloc(sizeof(char)  * MAX_SIZE);
+    int * dist       = (int *)  malloc(sizeof(int)   * MAX_SIZE);
+    int * verified   = (int *)  malloc(sizeof(int)   * MAX_SIZE);
+
+    for (i = 0; i < MAX_SIZE; i++)
+    {
+        dist[i] = INT_MAX;
+        prev[i] = '-';
+        verified[i] = 0;
+    }
+
+    dist[to_int(s)] = 0;
+
+    for (i = 0; queue[i] != '\0'; i++)
+    {
+        x = findVertex(g, queue[i]);
+        Edge *neighbor = x->edges;
+        // for all neighbors
+        while(neighbor)
+        {
+            dist_adj = neighbor->n_edges;
+            int j = to_int(neighbor->neighbour);
+            // if it was not yet marked as verified[]
+            // and its distance should be updated
+            // != INT_MAX protection against integer overflowing
+            if (verified[j] == 0 && dist[j] > dist[to_int(x->vertex)] + dist_adj && dist[to_int(x->vertex)] != INT_MAX)
+            {
+                dist[j] = dist[to_int(x->vertex)] + dist_adj;
+                prev[j] = x->vertex;
+            }
+            neighbor = neighbor->next_edge;
+        }
+
+        verified[to_int(x->vertex)] = 1;
+    }
+
+    Graph* aux = g;
+    while(aux)
+    {
+        int j = to_int(aux->vertex);
+        printf("dist[%c] = %d \t\t pai[%c] = %c\n", aux->vertex, dist[j], aux->vertex, prev[j]);
+
+        aux = aux->next_vertex;
+    }
+
+    free(dist);
+    free(prev);
+    free(verified);
+    free(queue);
 }

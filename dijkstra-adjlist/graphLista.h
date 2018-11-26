@@ -2,6 +2,7 @@
 // the ROOT_VERTEX is used to index the root node of the vertexes.
 // Don't index any vertex as the ROOT_VERTEX index.
 #define ROOT_VERTEX '\0'
+#define MAX_SIZE 26
 
 struct vertex_node {
     char vertex;
@@ -26,6 +27,7 @@ void removeVertex(Graph *g, char v);
 void removeEdge(Graph *g, char v, char u);
 int isNeighbour(Graph g, char v, char u);
 void neighbours(Graph g, char v);
+void dijkstra(Graph *g, char s);
 int vertexSize(Graph g);
 int edgeSize(Graph g);
 void endGraph(Graph *g);
