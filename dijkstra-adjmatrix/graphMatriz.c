@@ -155,46 +155,12 @@ void endGraph(Graph *g){
     free(g->vertexes);
 }
 
-// FIXME: disgusting O(n³).
-int* dijkstra_queue(Graph *g, char s){
-    // it's not really a queue, just a list that we are going to treat as a queue
-    int * queue = (int *) malloc(sizeof(int) * MAX_SIZE), i, j, k, queue_length = 1;
-
-    queue[0] = to_int(s);
-    queue[1] = -1; // keep track of the end of the queue as we are only returning the queue itself
-
-    // for each possible item on queue
-    for (i = 0; i < queue_length; i++)
-    {
-        // for each possible neighbor of the given vertex in queue
-        for (j = 0; j < MAX_SIZE; j++)
-        {
-            // if it's a neighbor indeed
-            if (g->matrix[queue[i]][j] > 0)
-            {
-                int already_in_queue = 0;
-                // check if the neighbor is already queued
-                for (k = 0; k < queue_length; k++) if (queue[k] == j) already_in_queue = 1;
-                // queue him if not and increase the queue length tracker
-                if (already_in_queue == 0) {
-                    queue[queue_length] = j;
-                    queue_length++;
-                    queue[queue_length] = -1;
-                }
-            }
-        }
-    }
-
-    return queue;
-
-}
 
 void dijkstra(Graph *g, char s){
     if (!hasVertex(g, s)) return defaultErrorMessage();
 
-    int vertex = to_int(s), i, j, dist_adj, x;
+    int vertex = to_int(s), i, j, dist_adj, x, min;
 
-    int* queue      = dijkstra_queue(g, s);
     int* dist       = (int *) malloc(sizeof(int)   * MAX_SIZE);
     int* prev       = (int *) malloc(sizeof(int *) * MAX_SIZE);
     int* verified   = (int *) malloc(sizeof(int)   * MAX_SIZE);
@@ -202,15 +168,24 @@ void dijkstra(Graph *g, char s){
     for (i = 0; i < MAX_SIZE; i++)
     {
         dist[i] = INT_MAX;
-        prev[i] = 0;
+        prev[i] = -1;
         verified[i] = 0;
     }
 
     dist[vertex] = 0;
 
-    for (i = 0; queue[i] != -1; i++)
+    for (i = 0; i < MAX_SIZE; i++)
     {
-        x = queue[i];
+
+        min = -1;
+        for (j = 0; j < MAX_SIZE; j++)
+        {
+            if (g->vertexes[j] && verified[j] == 0 && (min == -1 || dist[j] < dist[min]))
+                min = j;
+        }
+
+        x = min;
+        if (x == -1) break;
 
         // for all possible adjacent vertexes
         for (j = 0; j < MAX_SIZE; j++)
@@ -235,7 +210,7 @@ void dijkstra(Graph *g, char s){
         if (g->vertexes[i] > 0)
         {
             char v = to_char(i);
-            char pai = prev[i] == 0 ? '-' : to_char(prev[i]);
+            char pai = prev[i] == -1 ? '-' : to_char(prev[i]);
             printf("dist[%c] = %d \t\t pai[%c] = %c\n", v, dist[i], v, pai);
         }
     }
@@ -243,11 +218,4 @@ void dijkstra(Graph *g, char s){
     free(dist);
     free(prev);
     free(verified);
-    free(queue);
 }
-
-
-
-
-
-

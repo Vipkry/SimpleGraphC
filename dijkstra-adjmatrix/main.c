@@ -8,40 +8,79 @@ int main() {
 
     insertVertex(g, 'A');
     insertVertex(g, 'B');
-    insertVertex(g, 'E');
-    insertVertex(g, 'D');
     insertVertex(g, 'C');
-
-    insertEdge(g, 'A', 'B');
-    insertEdge(g, 'A', 'E');
-
-    removeVertex(g, 'A');
-    insertVertex(g, 'A');
+    insertVertex(g, 'D');
+    insertVertex(g, 'E');
+    insertVertex(g, 'F');
+    insertVertex(g, 'G');
 
     insertEdge(g, 'A', 'B');
     insertEdge(g, 'A', 'B');
-    insertEdge(g, 'A', 'B');
-    insertEdge(g, 'A', 'E');
-    insertEdge(g, 'A', 'E');
-    insertEdge(g, 'E', 'D');
-    insertEdge(g, 'C', 'D');
+
+    insertEdge(g, 'A', 'C');
+    insertEdge(g, 'A', 'C');
+    insertEdge(g, 'A', 'C');
+    insertEdge(g, 'A', 'C');
+
+    insertEdge(g, 'B', 'C');
+
+    insertEdge(g, 'B', 'D');
+    insertEdge(g, 'B', 'D');
+    insertEdge(g, 'B', 'D');
+
+    insertEdge(g, 'B', 'E');
+    insertEdge(g, 'B', 'E');
+    insertEdge(g, 'B', 'E');
+    insertEdge(g, 'B', 'E');
+    insertEdge(g, 'B', 'E');
+
     insertEdge(g, 'C', 'D');
     insertEdge(g, 'C', 'D');
     insertEdge(g, 'C', 'D');
     insertEdge(g, 'C', 'D');
     insertEdge(g, 'C', 'D');
 
+    insertEdge(g, 'C', 'F');
+    insertEdge(g, 'C', 'F');
+    insertEdge(g, 'C', 'F');
+    insertEdge(g, 'C', 'F');
+    insertEdge(g, 'C', 'F');
+    insertEdge(g, 'C', 'F');
 
-    printf("A->B: %d\n", isNeighbour(graph, 'A', 'B'));
+    insertEdge(g, 'D', 'E');
+    insertEdge(g, 'D', 'E');
+    insertEdge(g, 'D', 'E');
+
+    insertEdge(g, 'D', 'F');
+
+    insertEdge(g, 'E', 'F');
+    insertEdge(g, 'E', 'F');
+    insertEdge(g, 'E', 'F');
+    insertEdge(g, 'E', 'F');
+    insertEdge(g, 'E', 'F');
+    insertEdge(g, 'E', 'F');
+    insertEdge(g, 'E', 'F');
+    insertEdge(g, 'E', 'F');
+    insertEdge(g, 'E', 'F');
+
+    insertEdge(g, 'E', 'G');
+    insertEdge(g, 'E', 'G');
+    insertEdge(g, 'E', 'G');
+    insertEdge(g, 'E', 'G');
+    insertEdge(g, 'E', 'G');
+
+    insertEdge(g, 'F', 'G');
+
     dijkstra(g, 'A');
-    printf("E->B: %d\n", isNeighbour(graph, 'E', 'B'));
 
-    neighbours(graph, 'A');
+
+//    printf("A->B: %d\n", isNeighbour(graph, 'A', 'B'));
+//    printf("E->B: %d\n", isNeighbour(graph, 'E', 'B'));
+
+    neighbours(graph, 'D');
 
     printf("Edges: %d\n", edgeSize(graph));
     printf("Vertexes: %d\n", vertexSize(graph));
-
-
 
     endGraph(g);
     return 0;
