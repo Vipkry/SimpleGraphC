@@ -73,9 +73,8 @@ int main() {
 
     dijkstra(g, 'A');
 
-
-//    printf("A->B: %d\n", isNeighbour(graph, 'A', 'B'));
-//    printf("E->B: %d\n", isNeighbour(graph, 'E', 'B'));
+    printf("A->B: %d\n", isNeighbour(graph, 'A', 'B'));
+    printf("E->B: %d\n", isNeighbour(graph, 'E', 'B'));
 
     neighbours(graph, 'D');
 

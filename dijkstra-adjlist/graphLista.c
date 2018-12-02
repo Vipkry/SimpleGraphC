@@ -9,12 +9,6 @@ int to_int(char c){ ;
     return (int) c - (int) 'A';
 }
 
-/* Maps vertex int to char.
-*  starting by uppercase 'A' */
-char to_char(int i){
-    return i + 'A';
-}
-
 /* Displays error message in case the program is trying to access or make use of
  * vertexes not yet initialized or re-assigning one of them */
 void defaultErrorMessage(){
@@ -34,7 +28,7 @@ int hasVertex(Graph *g, char c){
 Graph initGraph(){
     Graph* g  = (Graph *) malloc(sizeof(Graph));
     g->vertex = ROOT_VERTEX; // first vertex will always be ROOT_VERTEX for simplification purposes
-    g->edges = 0;
+    g->total_edges = 0;
     g->edges = NULL;
     g->next_vertex = NULL;
     return *g;
@@ -68,6 +62,8 @@ void insertVertex(Graph *g, char v){
     Graph *newGraph = (Graph *) malloc(sizeof(Graph));
     newGraph->vertex = v;
     newGraph->next_vertex = NULL;
+    newGraph->edges = NULL;
+    newGraph->total_edges = 0;
     g->next_vertex = newGraph;
 }
 
@@ -126,8 +122,7 @@ int vertexSize(Graph g){
 }
 
 int edgeSize(Graph g){
-    Graph* graph = &g;
-    return graph->total_edges; //just get the stored value, that will be O(1) instead of O(n*m)
+    return g.total_edges; //just get the stored value, that will be O(1) instead of O(n*m)
 }
 
 int isNeighbour(Graph g, char v, char u){
@@ -226,46 +221,13 @@ void endGraph(Graph *g){
         removeVertex(g, g->next_vertex->vertex);
 }
 
-
-char* dijkstra_queue(Graph *g, char s){
-    // it's not really a queue, just a list that we are going to treat as a queue
-    char * queue = (char *) malloc(sizeof(char) * MAX_SIZE), i, k, queue_length = 1;
-
-    queue[0] = s;
-    queue[1] = '\0'; // keep track of the end of the queue as we are only returning the queue itself
-
-    // for each possible item on queue
-    for (i = 0; i < queue_length; i++)
-    {
-        Edge *next_neighbor = g->edges;
-        // for each neighbor of the given vertex in queue
-        while(next_neighbor)
-        {
-            int already_in_queue = 0;
-            // check if the neighbor is already queued
-            for (k = 0; k < queue_length; k++) if (queue[k] == next_neighbor->neighbour) already_in_queue = 1;
-            // queue him if not and increase the queue length tracker
-            if (already_in_queue == 0) {
-                queue[queue_length] = next_neighbor->neighbour;
-                queue_length++;
-                queue[queue_length] = '\0';
-            }
-
-            next_neighbor = next_neighbor->next_edge;
-        }
-    }
-
-    return queue;
-
-}
-
 void dijkstra(Graph *g, char s){
     if (!hasVertex(g, s)) return defaultErrorMessage();
 
     int i, dist_adj;
     Graph *x;
 
-    char* queue      = dijkstra_queue(g, s);
+    char* queue      = NULL; //dijkstra_queue(g, s);
     char* prev       = (char *) malloc(sizeof(char)  * MAX_SIZE);
     int * dist       = (int *)  malloc(sizeof(int)   * MAX_SIZE);
     int * verified   = (int *)  malloc(sizeof(int)   * MAX_SIZE);
