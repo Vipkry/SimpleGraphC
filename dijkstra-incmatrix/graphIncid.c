@@ -40,6 +40,7 @@ int* initializeVertexes(){
 
 Graph initGraph(){
     Graph* g = (Graph *) malloc(sizeof(Graph));
+    g->matrix = NULL;
     g->vertexes = initializeVertexes();
     g->edges = 0;
     return *g;
@@ -54,15 +55,14 @@ void insertVertex(Graph *g, char v){
 void insertEdge(Graph *g, char v, char u){
     if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
 
-    int v1 = to_int(v), v2 = to_int(u);
+    int v1 = to_int(v), v2 = to_int(u), i;
     g->edges++;
     // we could search for an existing edge before inserting, but that would increase our complexity to O(n)
     // while not searching for it has O(4) dismissing realloc complexity.
     g->matrix = (int **) realloc(g->matrix, g->edges * sizeof(int *));
     int last_edge_index = g->edges - 1;
     g->matrix[g->edges - 1] = (int *) malloc(sizeof(int) * MAX_ROW_SIZE);
-    g->matrix[last_edge_index][v1] = 0;
-    g->matrix[last_edge_index][v2] = 0;
+    for (i = 0; i < MAX_ROW_SIZE; i++) g->matrix[last_edge_index][i] = 0;
     g->matrix[last_edge_index][v1]++;
     g->matrix[last_edge_index][v2]++;
 }
@@ -90,20 +90,15 @@ int isNeighbour(Graph g, char v, char u){
         return 0;
     }
 
-    int i, j, v1 = to_int(v), v2 = to_int(u);
+    int i, v1 = to_int(v), v2 = to_int(u);
 
     // for each edge
-    for (i = 0; i < graph->edges; i++){
-        // if that edge reaches a given vertex
-        if (graph->matrix[i][v1]){
-            // search for it's neighbours and check if it's a match
-            for(j = 0; j < MAX_ROW_SIZE; j++){
-                if (graph->matrix[i][j] && j == v2){
-                    return 1;
-                }
-            }
-        }
-    }
+    for (i = 0; i < graph->edges; i++)
+        // if that edge reaches the given vertex and both are connected
+        if (graph->matrix[i][v1] && graph->matrix[i][v2])
+            // protecting in case of loops (which we are considering marked as 2 not 1)
+            if ((v1 == v2 && graph->matrix[i][v1] == 2) || v1 != v2)
+                return 1;
 
     return 0;
 
@@ -132,7 +127,7 @@ void neighbours(Graph g, char v){
 
 void removeEdge(Graph *g, char v, char u){
     if (!hasVertex(g, v) || !hasVertex(g, u)) return defaultErrorMessage();
-    int v1 = to_int(v), v2 = to_int(u), i = 0, j = 0;
+    int v1 = to_int(v), v2 = to_int(u), i = 0;
 
     int edge_row_index = -1;
     for (i = 0; i < g->edges; i++){
