@@ -9,6 +9,12 @@ int to_int(char c){ ;
     return (int) c - (int) 'A';
 }
 
+/* Maps vertex int to char.
+*  starting by uppercase 'A' */
+char to_char(int i){
+    return i + 'A';
+}
+
 /* Displays error message in case the program is trying to access or make use of
  * vertexes not yet initialized or re-assigning one of them */
 void defaultErrorMessage(){
@@ -221,60 +227,94 @@ void endGraph(Graph *g){
         removeVertex(g, g->next_vertex->vertex);
 }
 
+//todo implement
+int findAdjDistance(Graph *g, char u, char v){
+    int result = 0;
+
+    while (g != NULL)
+    {
+        if (g->vertex == u)
+        {
+            Edge *neighbor = g->edges;
+            while(neighbor)
+            {
+                if (neighbor->neighbour == v)
+                {
+                    result = neighbor->n_edges;
+                    break;
+                }
+                neighbor = neighbor->next_edge;
+            }
+            break;
+        }
+        g = g->next_vertex;
+    }
+
+    return result;
+}
+
 void dijkstra(Graph *g, char s){
     if (!hasVertex(g, s)) return defaultErrorMessage();
 
-    int i, dist_adj;
-    Graph *x;
+    int vertex = to_int(s), i, j, dist_adj, x, min;
 
-    char* queue      = NULL; //dijkstra_queue(g, s);
-    char* prev       = (char *) malloc(sizeof(char)  * MAX_SIZE);
-    int * dist       = (int *)  malloc(sizeof(int)   * MAX_SIZE);
-    int * verified   = (int *)  malloc(sizeof(int)   * MAX_SIZE);
+    int* dist       = (int *) malloc(sizeof(int)   * MAX_SIZE);
+    int* prev       = (int *) malloc(sizeof(int *) * MAX_SIZE);
+    int* verified   = (int *) malloc(sizeof(int)   * MAX_SIZE);
 
     for (i = 0; i < MAX_SIZE; i++)
     {
         dist[i] = INT_MAX;
-        prev[i] = '-';
+        prev[i] = -1;
         verified[i] = 0;
     }
 
-    dist[to_int(s)] = 0;
+    dist[vertex] = 0;
 
-    for (i = 0; queue[i] != '\0'; i++)
+    // for each vertex
+    for (i = 0; i < MAX_SIZE; i++)
     {
-        x = findVertex(g, queue[i]);
-        Edge *neighbor = x->edges;
-        // for all neighbors
-        while(neighbor)
+        // find the next vertex to verify
+        min = -1;
+        for (j = 0; j < MAX_SIZE; j++)
         {
-            dist_adj = neighbor->n_edges;
-            int j = to_int(neighbor->neighbour);
-            // if it was not yet marked as verified[]
-            // and its distance should be updated
-            // != INT_MAX protection against integer overflowing
-            if (verified[j] == 0 && dist[j] > dist[to_int(x->vertex)] + dist_adj && dist[to_int(x->vertex)] != INT_MAX)
-            {
-                dist[j] = dist[to_int(x->vertex)] + dist_adj;
-                prev[j] = x->vertex;
-            }
-            neighbor = neighbor->next_edge;
+            if (hasVertex(g, to_char(j)) && verified[j] == 0 && (min == -1 || dist[j] < dist[min]))
+                min = j;
         }
 
-        verified[to_int(x->vertex)] = 1;
+        x = min;
+        if (x == -1) break;
+
+        // for all possible adjacent vertexes
+        for (j = 0; j < MAX_SIZE; j++)
+        {
+            dist_adj = findAdjDistance(g, to_char(x), to_char(j));
+
+            // if it's a neighbor indeed
+            // and it was not yet marked as verified[]
+            // and its distance should be updated
+            // != INT_MAX protection against integer overflowing
+            if (dist_adj > 0 && verified[j] == 0 && dist[j] > dist[x] + dist_adj && dist[x] != INT_MAX)
+            {
+                dist[j] = dist[x] + dist_adj;
+                prev[j] = x;
+            }
+        }
+
+        verified[x] = 1;
     }
 
-    Graph* aux = g;
-    while(aux)
+    for (i = 0; i < MAX_SIZE; i++)
     {
-        int j = to_int(aux->vertex);
-        printf("dist[%c] = %d \t\t pai[%c] = %c\n", aux->vertex, dist[j], aux->vertex, prev[j]);
-
-        aux = aux->next_vertex;
+        if (hasVertex(g, to_char(i)))
+        {
+            char v = to_char(i);
+            char pai = prev[i] == -1 ? '-' : to_char(prev[i]);
+            printf("dist[%c] = %d \t\t pai[%c] = %c\n", v, dist[i], v, pai);
+        }
     }
 
     free(dist);
     free(prev);
     free(verified);
-    free(queue);
 }
